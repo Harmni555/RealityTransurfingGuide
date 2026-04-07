@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inner Space — Meditation & Transurfing Framework</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inconsolata:wght@300;400;500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --void: #07090f;
+  --deep: #0d1120;
+  --mid: #161c2e;
+  --surface: #1e2640;
+  --border: rgba(255,255,255,0.07);
+  --star: #e8e4d8;
+  --mist: #8b90a8;
+  --gold: #c9a96e;
+  --teal: #5fb3a1;
+  --violet: #8b7ec8;
+  --rose: #c47b8a;
+  --glow-gold: rgba(201,169,110,0.15);
+  --glow-teal: rgba(95,179,161,0.12);
+}
+
+body {
+  font-family: 'Jost', sans-serif;
+  background: var(--void);
+  color: var(--star);
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: default;
+}
+
+/* Animated starfield background */
+.cosmos {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.cosmos canvas { width: 100%; height: 100%; }
+
+/* Floating orb */
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+  animation: drift 18s ease-in-out infinite alternate;
+}
+.orb-1 { width: 500px; height: 500px; background: rgba(139,126,200,0.07); top: -100px; right: -100px; animation-delay: 0s; }
+.orb-2 { width: 400px; height: 400px; background: rgba(95,179,161,0.06); bottom: -80px; left: -80px; animation-delay: -9s; }
+
+@keyframes drift {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(30px, 40px) scale(1.08); }
+}
+
+/* Layout */
+.shell {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 28px 80px;
+}
+
+/* Header */
+.header {
+  padding: 60px 0 48px;
+  text-align: center;
+  position: relative;
+}
+.header-eye {
+  font-size: 42px;
+  display: block;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 0 16px var(--gold));
+  animation: pulse-eye 4s ease-in-out infinite;
+}
+@keyframes pulse-eye {
+  0%,100% { filter: drop-shadow(0 0 14px var(--gold)); transform: scale(1); }
+  50%      { filter: drop-shadow(0 0 28px var(--gold)); transform: scale(1.04); }
+}
+.header-kicker {
+  font-family: 'Inconsolata', monospace;
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+  opacity: 0.85;
+}
+.header h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(34px, 6vw, 60px);
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  margin-bottom: 16px;
+  color: var(--star);
+}
+.header h1 em {
+  font-style: italic;
+  color: var(--gold);
+}
+.header p {
+  font-size: 14px;
+  color: var(--mist);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.8;
+  font-weight: 300;
+}
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0.2;
+  margin: 0 0 48px;
+}
+
+/* Section label */
+.s-label {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.7;
+  margin-bottom: 8px;
+}
+.s-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: 26px;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+.s-desc {
+  font-size: 13px;
+  color: var(--mist);
+  line-height: 1.8;
+  margin-bottom: 28px;
+  font-weight: 300;
+}
+
+/* Tab nav */
+.tab-nav {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 40px;
+  gap: 0;
+  overflow-x: auto;
+}
+.tab-btn {
+  font-family: 'Inconsolata', monospace;
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--mist);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 14px 22px;
+  cursor: pointer;
+  white-space: nowrap;
+  margin-bottom: -1px;
+  transition: all 0.25s;
+}
+.tab-btn:hover { color: var(--star); }
+.tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* Panels */
+.panel { display: none; animation: fadeUp 0.45s ease; }
+.panel.active { display: block; }
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(18px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* Framework cards */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.fcard {
+  background: var(--mid);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 26px 22px;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.fcard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.fcard.gold::before  { background: var(--glow-gold); }
+.fcard.teal::before  { background: var(--glow-teal); }
+.fcard.violet::before { background: rgba(139,126,200,0.08); }
+.fcard.rose::before  { background: rgba(196,123,138,0.08); }
+.fcard:hover::before { opacity: 1; }
+.fcard:hover { border-color: rgba(255,255,255,0.14); transform: translateY(-3px); }
+
+.fcard-tag {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.fcard.gold .fcard-tag  { color: var(--gold); }
+.fcard.teal .fcard-tag  { color: var(--teal); }
+.fcard.violet .fcard-tag { color: var(--violet); }
+.fcard.rose .fcard-tag  { color: var(--rose); }
+
+.fcard-icon { font-size: 26px; margin-bottom: 10px; display: block; }
+.fcard h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.fcard p {
+  font-size: 12.5px;
+  color: var(--mist);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+/* Transurfing model */
+.tsurf-model {
+  background: var(--mid);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 24px;
+}
+.tsurf-model h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: 4px;
+}
+.tsurf-model .subtitle {
+  font-size: 12px;
+  color: var(--mist);
+  margin-bottom: 24px;
+  font-style: italic;
+}
+.concept-row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.concept {
+  display: flex;
+  gap: 16px;
+  padding: 16px 18px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+  align-items: flex-start;
+}
+.concept:hover { border-color: rgba(201,169,110,0.3); background: rgba(201,169,110,0.05); }
+.concept.open  { border-color: rgba(201,169,110,0.4); background: rgba(201,169,110,0.06); }
+.concept-icon  { font-size: 22px; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+.concept-body  { flex: 1; }
+.concept-name  {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.concept-tagline { font-size: 12px; color: var(--mist); font-weight: 300; }
+.concept-detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, margin-top 0.3s;
+  font-size: 13px;
+  color: var(--mist);
+  line-height: 1.75;
+  font-weight: 300;
+}
+.concept.open .concept-detail { max-height: 200px; margin-top: 12px; }
+.concept-arrow {
+  font-size: 12px;
+  color: var(--mist);
+  transition: transform 0.3s;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+.concept.open .concept-arrow { transform: rotate(90deg); color: var(--gold); }
+
+/* Practice routine builder */
+.routine-builder {
+  background: var(--mid);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.routine-head {
+  background: var(--surface);
+  padding: 20px 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.routine-head h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 400;
+}
+.routine-meta {
+  font-family: 'Inconsolata', monospace;
+  font-size: 10px;
+  color: var(--teal);
+  letter-spacing: 1px;
+}
+
+.time-slots { padding: 20px 26px; display: flex; flex-direction: column; gap: 10px; }
+.slot {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: all 0.2s;
+}
+.slot.active-slot { border-color: rgba(95,179,161,0.4); background: rgba(95,179,161,0.06); }
+.slot-time {
+  font-family: 'Inconsolata', monospace;
+  font-size: 11px;
+  color: var(--teal);
+  width: 60px;
+  flex-shrink: 0;
+}
+.slot-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.slot.active-slot .slot-dot { background: var(--teal); box-shadow: 0 0 8px var(--teal); }
+.slot-name {
+  font-size: 13.5px;
+  font-weight: 400;
+  flex: 1;
+}
+.slot-dur {
+  font-family: 'Inconsolata', monospace;
+  font-size: 10px;
+  color: var(--mist);
+  background: rgba(255,255,255,0.04);
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+.slot-toggle {
+  width: 28px; height: 16px;
+  background: var(--surface);
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.slot-toggle::after {
+  content:'';
+  position: absolute;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--mist);
+  top: 3px; left: 3px;
+  transition: all 0.25s;
+}
+.slot.active-slot .slot-toggle { background: rgba(95,179,161,0.3); }
+.slot.active-slot .slot-toggle::after { background: var(--teal); left: 15px; }
+
+/* Habit tracker */
+.tracker-section {
+  margin-bottom: 24px;
+}
+.tracker-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: 16px;
+}
+.habits-list { display: flex; flex-direction: column; gap: 10px; }
+.habit-row {
+  background: var(--mid);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.habit-name { flex: 1; font-size: 13.5px; font-weight: 300; }
+.habit-emoji { font-size: 18px; }
+.streak-dots { display: flex; gap: 5px; }
+.sdot {
+  width: 22px; height: 22px;
+  border-radius: 5px;
+  background: var(--surface);
+  border: none;
+  cursor: pointer;
+  font-size: 9px;
+  font-family: 'Inconsolata', monospace;
+  color: var(--mist);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.sdot:hover { background: rgba(201,169,110,0.3); }
+.sdot.lit { background: var(--gold); color: var(--void); font-weight: 700; }
+
+/* Deep dive cards */
+.depth-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  margin-bottom: 32px;
+}
+.depth-card {
+  background: var(--mid);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px 18px;
+  text-align: center;
+  transition: all 0.25s;
+  cursor: default;
+}
+.depth-card:hover { border-color: rgba(139,126,200,0.4); transform: translateY(-2px); }
+.depth-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px;
+  font-weight: 300;
+  color: var(--violet);
+  display: block;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.depth-label {
+  font-size: 12px;
+  color: var(--mist);
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+/* Reflection journal */
+.journal {
+  background: var(--mid);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 24px;
+}
+.journal h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: 4px;
+}
+.journal .j-sub {
+  font-size: 12px;
+  color: var(--mist);
+  margin-bottom: 22px;
+  font-weight: 300;
+  font-style: italic;
+}
+.j-prompt {
+  font-family: 'Inconsolata', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--violet);
+  margin-bottom: 7px;
+}
+.j-textarea {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  color: var(--star);
+  font-family: 'Jost', sans-serif;
+  font-size: 13.5px;
+  font-weight: 300;
+  resize: none;
+  outline: none;
+  line-height: 1.7;
+  height: 80px;
+  margin-bottom: 18px;
+  transition: border-color 0.2s;
+}
+.j-textarea:focus { border-color: rgba(139,126,200,0.5); }
+.j-textarea::placeholder { color: rgba(139,144,168,0.45); }
+
+/* Principle callout */
+.principle {
+  border-left: 2px solid var(--gold);
+  padding: 14px 20px;
+  background: rgba(201,169,110,0.06);
+  border-radius: 0 10px 10px 0;
+  margin-bottom: 14px;
+}
+.principle strong {
+  display: block;
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 5px;
+}
+.principle p { font-size: 13px; color: var(--mist); line-height: 1.75; font-weight: 300; }
+
+/* Navigation buttons */
+.nav-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.btn {
+  font-family: 'Inconsolata', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.btn-ghost { background: none; border-color: var(--border); color: var(--mist); }
+.btn-ghost:hover { border-color: var(--star); color: var(--star); }
+.btn-gold { background: var(--gold); color: var(--void); font-weight: 500; }
+.btn-gold:hover { background: #d4b47e; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(201,169,110,0.3); }
+
+/* Progress dots */
+.progress-dots {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 36px;
+}
+.pdot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--surface);
+  transition: all 0.3s;
+}
+.pdot.active { background: var(--gold); width: 22px; border-radius: 3px; }
+.pdot.done { background: var(--teal); }
+
+/* Quote */
+.quote-block {
+  text-align: center;
+  padding: 36px 24px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--mid);
+  margin-bottom: 28px;
+}
+.quote-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--star);
+  margin-bottom: 14px;
+}
+.quote-attr {
+  font-family: 'Inconsolata', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.7;
+}
+
+@media (max-width: 600px) {
+  .shell { padding: 0 16px 60px; }
+  .streak-dots { gap: 3px; }
+  .sdot { width: 18px; height: 18px; font-size: 8px; }
+  .habit-row { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<!-- Cosmos background -->
+<div class="cosmos"><canvas id="stars"></canvas></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<div class="shell">
+
+  <!-- Header -->
+  <div class="header">
+    <span class="header-eye">🜂</span>
+    <div class="header-kicker">Learning Framework · Inner Practice</div>
+    <h1>Meditation &<br><em>Reality Transurfing</em></h1>
+    <p>A structured path for someone who already knows the basics — going deeper into visualization, reduced importance, and daily practice that actually transforms.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Progress dots -->
+  <div class="progress-dots" id="progressDots">
+    <div class="pdot active"></div>
+    <div class="pdot"></div>
+    <div class="pdot"></div>
+    <div class="pdot"></div>
+    <div class="pdot"></div>
+  </div>
+
+  <!-- Tab nav -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="goTo(0)">Frameworks</button>
+    <button class="tab-btn" onclick="goTo(1)">Transurfing Map</button>
+    <button class="tab-btn" onclick="goTo(2)">Daily Practice</button>
+    <button class="tab-btn" onclick="goTo(3)">Depth Tracker</button>
+    <button class="tab-btn" onclick="goTo(4)">Journal</button>
+  </div>
+
+  <!-- ── PANEL 0: Frameworks ── -->
+  <div class="panel active" id="panel-0">
+    <div class="s-label">Step 01 — Core Frameworks</div>
+    <div class="s-title">The Four Pillars of Inner Practice</div>
+    <div class="s-desc">You have a foundation. Now it's about moving from intellectual knowledge to embodied habit. These frameworks work together — each one deepens the others.</div>
+
+    <div class="card-grid">
+      <div class="fcard gold">
+        <div class="fcard-tag">Awareness</div>
+        <span class="fcard-icon">🧘</span>
+        <h3>Meditation</h3>
+        <p>The bedrock. Without a trained observer — a settled, quiet awareness — visualization becomes daydream and Transurfing becomes wishful thinking. The seat from which everything else operates.</p>
+      </div>
+      <div class="fcard violet">
+        <div class="fcard-tag">Projection</div>
+        <span class="fcard-icon">🔮</span>
+        <h3>Visualization</h3>
+        <p>Directed inner imagery that imprints reality. From simple mental rehearsal to full sensory immersion — feeling the future as present. The bridge between imagination and manifestation.</p>
+      </div>
+      <div class="fcard teal">
+        <div class="fcard-tag">Navigation</div>
+        <span class="fcard-icon">🌊</span>
+        <h3>Reality Transurfing</h3>
+        <p>Vadim Zeland's model of "sliding" through the space of variations. Reduce importance. Move with the flow of alternatives. Stop fighting — start choosing.</p>
+      </div>
+      <div class="fcard rose">
+        <div class="fcard-tag">Integration</div>
+        <span class="fcard-icon">🌀</span>
+        <h3>Heart–Mind Coherence</h3>
+        <p>The union of thought and feeling. Visualization is 10x more powerful when paired with genuine emotional resonance. This is the frequency that "transmits."</p>
+      </div>
+    </div>
+
+    <div class="principle">
+      <strong>Key Insight for Intermediates</strong>
+      <p>Most people plateau because they separate these practices. The real leap happens when meditation creates the stillness, visualization uses that stillness with feeling, and Transurfing teaches you to not grip the outcome. They are one system.</p>
+    </div>
+
+    <div class="nav-row">
+      <span></span>
+      <button class="btn btn-gold" onclick="goTo(1)">Next: Transurfing Map →</button>
+    </div>
+  </div>
+
+  <!-- ── PANEL 1: Transurfing Map ── -->
+  <div class="panel" id="panel-1">
+    <div class="s-label">Step 02 — Transurfing Deep Map</div>
+    <div class="s-title">Core Concepts, Expanded</div>
+    <div class="s-desc">Tap each concept to unfold the deeper layer — and how it connects to your practice. These are the ideas most people misunderstand, even after reading the books.</div>
+
+    <div class="tsurf-model">
+      <h3>The Transurfing Model</h3>
+      <div class="subtitle">Vadim Zeland — Space of Variations</div>
+
+      <div class="concept-row">
+        <div class="concept" onclick="toggleConcept(this)">
+          <div class="concept-icon">🌌</div>
+          <div class="concept-body">
+            <div class="concept-name">Space of Variations</div>
+            <div class="concept-tagline">All possible timelines already exist</div>
+            <div class="concept-detail">You don't create reality — you select it. The space of variations is Zeland's term for an infinite field of pre-existing life scripts. Your thoughts, feelings, and actions function as a "tuner" that moves you between them. Practice: When meditating, visualize not <em>building</em> your desired reality, but gently sliding toward one that already exists.</div>
+          </div>
+          <div class="concept-arrow">▶</div>
+        </div>
+
+        <div class="concept" onclick="toggleConcept(this)">
+          <div class="concept-icon">⚖️</div>
+          <div class="concept-body">
+            <div class="concept-name">Reducing Importance</div>
+            <div class="concept-tagline">The single most powerful Transurfing practice</div>
+            <div class="concept-detail">Excess importance — over-valuing an outcome — creates tension in the field that actually repels what you want. The pendulum of desire becomes a pendulum of fear. Practice: After each visualization, consciously release attachment. Say inwardly: "I would love this, and I am fine without it." This is not apathy — it is freedom.</div>
+          </div>
+          <div class="concept-arrow">▶</div>
+        </div>
+
+        <div class="concept" onclick="toggleConcept(this)">
+          <div class="concept-icon">⏳</div>
+          <div class="concept-body">
+            <div class="concept-name">Pendulums</div>
+            <div class="concept-tagline">Energy structures that feed on your reaction</div>
+            <div class="concept-detail">Pendulums are collective thought-forms — social structures, ideologies, conflicts — that sustain themselves by pulling in emotional energy. Fear, anger, and obsession are the fuel. Practice: Notice when a situation is pulling a strong reaction. Ask: "Is this my desire, or am I feeding a pendulum?" Calm observation withdraws your energy from it.</div>
+          </div>
+          <div class="concept-arrow">▶</div>
+        </div>
+
+        <div class="concept" onclick="toggleConcept(this)">
+          <div class="concept-icon">🎯</div>
+          <div class="concept-body">
+            <div class="concept-name">Goal + Door (Frailing)</div>
+            <div class="concept-tagline">Give to the world what it needs, receive what you want</div>
+            <div class="concept-detail">Instead of forcing outcomes, find the "door" — the point of natural confluence where your goal and the world's needs align. Frailing: identify what you can offer, not what you can take. Practice: In meditation, ask "What does my goal give to others?" Let that question guide your visualization's emotional texture.</div>
+          </div>
+          <div class="concept-arrow">▶</div>
+        </div>
+
+        <div class="concept" onclick="toggleConcept(this)">
+          <div class="concept-icon">🪞</div>
+          <div class="concept-body">
+            <div class="concept-name">The Slide Technique</div>
+            <div class="concept-tagline">Transurfing's core visualization method</div>
+            <div class="concept-detail">A "slide" is a short, vivid mental movie of your desired reality — seen through your own eyes, felt in your body, heard in detail. You return to it daily, not with craving, but with quiet familiarity — as if it's already your life. Practice: Create a 60-90 second slide. Run it in morning meditation. The key: see <em>from inside</em> the scene, not watching yourself in it.</div>
+          </div>
+          <div class="concept-arrow">▶</div>
+        </div>
+
+        <div class="concept" onclick="toggleConcept(this)">
+          <div class="concept-icon">💫</div>
+          <div class="concept-body">
+            <div class="concept-name">Soul + Mind Unity</div>
+            <div class="concept-tagline">When heart and mind want the same thing</div>
+            <div class="concept-detail">The mind calculates, the soul feels. Most suffering comes from their conflict. When they align — when you genuinely feel good about a goal, not anxious — the path opens with surprising ease. Practice: Before any visualization, ask both: "Does my mind want this?" and "Does this feel light in my chest?" Only proceed when both answer yes.</div>
+          </div>
+          <div class="concept-arrow">▶</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="quote-block">
+      <div class="quote-text">"You don't have to fight for your place in the sun. You just need to slide toward the layer of the world where it already shines for you."</div>
+      <div class="quote-attr">— Vadim Zeland, Reality Transurfing</div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-ghost" onclick="goTo(0)">← Back</button>
+      <button class="btn btn-gold" onclick="goTo(2)">Next: Daily Practice →</button>
+    </div>
+  </div>
+
+  <!-- ── PANEL 2: Daily Practice ── -->
+  <div class="panel" id="panel-2">
+    <div class="s-label">Step 03 — Habit Architecture</div>
+    <div class="s-title">Your Daily Practice Routine</div>
+    <div class="s-desc">Toggle the practices you want to commit to. Start with 2–3. You can expand as they become automatic. Timing is suggestive — shift to fit your life.</div>
+
+    <div class="routine-builder">
+      <div class="routine-head">
+        <h3>Morning Sequence</h3>
+        <span class="routine-meta" id="morningCount">0 of 4 selected</span>
+      </div>
+      <div class="time-slots" id="morningSlots">
+        <div class="slot" onclick="toggleSlot(this, 'morning')">
+          <div class="slot-time">06:00</div>
+          <div class="slot-dot"></div>
+          <div class="slot-name">📿 Still Sitting — 10 min breath anchor, observer mode</div>
+          <div class="slot-dur">10 min</div>
+          <button class="slot-toggle"></button>
+        </div>
+        <div class="slot" onclick="toggleSlot(this, 'morning')">
+          <div class="slot-time">06:12</div>
+          <div class="slot-dot"></div>
+          <div class="slot-name">🔮 The Slide — vivid first-person visualization of goal reality</div>
+          <div class="slot-dur">5–7 min</div>
+          <button class="slot-toggle"></button>
+        </div>
+        <div class="slot" onclick="toggleSlot(this, 'morning')">
+          <div class="slot-time">06:20</div>
+          <div class="slot-dot"></div>
+          <div class="slot-name">💛 Heart Coherence — gratitude + feeling the state already</div>
+          <div class="slot-dur">3–5 min</div>
+          <button class="slot-toggle"></button>
+        </div>
+        <div class="slot" onclick="toggleSlot(this, 'morning')">
+          <div class="slot-time">06:25</div>
+          <div class="slot-dot"></div>
+          <div class="slot-name">⚖️ Importance Release — "I want this. I'm free without it."</div>
+          <div class="slot-dur">2 min</div>
+          <button class="slot-toggle"></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="routine-builder">
+      <div class="routine-head">
+        <h3>Evening Sequence</h3>
+        <span class="routine-meta" id="eveningCount">0 of 3 selected</span>
+      </div>
+      <div class="time-slots" id="eveningSlots">
+        <div class="slot" onclick="toggleSlot(this, 'evening')">
+          <div class="slot-time">21:00</div>
+          <div class="slot-dot"></div>
+          <div class="slot-name">🌊 Flow Review — notice where life supported you today</div>
+          <div class="slot-dur">5 min</div>
+          <button class="slot-toggle"></button>
+        </div>
+        <div class="slot" onclick="toggleSlot(this, 'evening')">
+          <div class="slot-time">21:07</div>
+          <div class="slot-dot"></div>
+          <div class="slot-name">🪞 Pendulum Check — what pulled my energy today?</div>
+          <div class="slot-dur">3 min</div>
+          <button class="slot-toggle"></button>
+        </div>
+        <div class="slot" onclick="toggleSlot(this, 'evening')">
+          <div class="slot-time">21:12</div>
+          <div class="slot-dot"></div>
+          <div class="slot-name">🌙 Hypnagogic Slide — replay slide in the threshold of sleep</div>
+          <div class="slot-dur">5–10 min</div>
+          <button class="slot-toggle"></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="principle">
+      <strong>Intermediate Principle</strong>
+      <p>The hypnagogic state (just before sleep) is neurologically one of the most powerful times for visualization. Consciousness is lowered, imagery becomes vivid, and the subconscious is highly receptive. This is where Transurfing's Slide technique produces the fastest results.</p>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-ghost" onclick="goTo(1)">← Back</button>
+      <button class="btn btn-gold" onclick="goTo(3)">Next: Depth Tracker →</button>
+    </div>
+  </div>
+
+  <!-- ── PANEL 3: Depth Tracker ── -->
+  <div class="panel" id="panel-3">
+    <div class="s-label">Step 04 — Habit Tracker</div>
+    <div class="s-title">Track Your Streak</div>
+    <div class="s-desc">Mark each day you completed your core practices. Consistency over 21 days begins the shift from effort to automatic. Hover and click to mark days done.</div>
+
+    <div class="depth-grid">
+      <div class="depth-card">
+        <span class="depth-num" id="streakCount">0</span>
+        <div class="depth-label">Day Streak</div>
+      </div>
+      <div class="depth-card">
+        <span class="depth-num" id="totalDone">0</span>
+        <div class="depth-label">Sessions Logged</div>
+      </div>
+      <div class="depth-card">
+        <span class="depth-num">21</span>
+        <div class="depth-label">Days to Habituation</div>
+      </div>
+      <div class="depth-card">
+        <span class="depth-num">66</span>
+        <div class="depth-label">Days to Automaticity</div>
+      </div>
+    </div>
+
+    <div class="tracker-section">
+      <div class="tracker-title">Daily Check-In — Week 1 through 4</div>
+      <div class="habits-list" id="habitsList">
+
+        <div class="habit-row">
+          <div class="habit-emoji">🧘</div>
+          <div class="habit-name">Morning Meditation (Stillness)</div>
+          <div class="streak-dots" id="dots-0"></div>
+        </div>
+        <div class="habit-row">
+          <div class="habit-emoji">🔮</div>
+          <div class="habit-name">The Slide Visualization</div>
+          <div class="streak-dots" id="dots-1"></div>
+        </div>
+        <div class="habit-row">
+          <div class="habit-emoji">⚖️</div>
+          <div class="habit-name">Importance Reduction Check</div>
+          <div class="streak-dots" id="dots-2"></div>
+        </div>
+        <div class="habit-row">
+          <div class="habit-emoji">🌙</div>
+          <div class="habit-name">Hypnagogic Slide (Evening)</div>
+          <div class="streak-dots" id="dots-3"></div>
+        </div>
+        <div class="habit-row">
+          <div class="habit-emoji">📓</div>
+          <div class="habit-name">Evening Reflection / Journal</div>
+          <div class="streak-dots" id="dots-4"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="principle">
+      <strong>On Streaks & Self-Compassion</strong>
+      <p>Transurfing itself warns against excess importance. Don't let the tracker become a pendulum. If you miss a day, simply return without drama. The path is not about perfection — it's about returning, and returning, and returning again.</p>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-ghost" onclick="goTo(2)">← Back</button>
+      <button class="btn btn-gold" onclick="goTo(4)">Next: Journal →</button>
+    </div>
+  </div>
+
+  <!-- ── PANEL 4: Journal ── -->
+  <div class="panel" id="panel-4">
+    <div class="s-label">Step 05 — Reflection Journal</div>
+    <div class="s-title">The Inner Observer's Log</div>
+    <div class="s-desc">Regular reflection is what separates people who dabble from those who transform. These prompts are tuned specifically for Transurfing + meditation practice.</div>
+
+    <div class="journal">
+      <h3>Tonight's Entry</h3>
+      <div class="j-sub">Five minutes of honest reflection rewires more than an hour of passive reading.</div>
+
+      <div class="j-prompt">My Slide today felt...</div>
+      <textarea class="j-textarea" placeholder="Vivid and real? Distant? Did any emotion arise naturally?"></textarea>
+
+      <div class="j-prompt">Where did I give excess importance today?</div>
+      <textarea class="j-textarea" placeholder="A conversation, an outcome, a worry — where did importance spike?"></textarea>
+
+      <div class="j-prompt">A sign that the flow supported me today...</div>
+      <textarea class="j-textarea" placeholder="A coincidence, ease, unexpected help, a door that opened..."></textarea>
+
+      <div class="j-prompt">My intention for tomorrow's morning practice...</div>
+      <textarea class="j-textarea" placeholder="What will you focus on? What quality do you want to bring?"></textarea>
+    </div>
+
+    <div class="quote-block">
+      <div class="quote-text">"The soul knows the way. The mind needs to stop arguing with it long enough to listen."</div>
+      <div class="quote-attr">— Adapted from Transurfing Principles</div>
+    </div>
+
+    <div class="principle">
+      <strong>Going Deeper from Here</strong>
+      <p>After 30 days of consistent practice, revisit the Transurfing Map (panel 2) with fresh eyes. You'll find that concepts you understood intellectually now feel lived-in and obvious. That is the difference between knowing and <em>being</em>.</p>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-ghost" onclick="goTo(3)">← Back</button>
+      <button class="btn btn-gold" onclick="goTo(0)">↺ Start Over</button>
+    </div>
+  </div>
+
+</div><!-- /shell -->
+
+<script>
+// ─── Starfield ───
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+let stars = [];
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+function initStars() {
+  stars = Array.from({length: 160}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 1.2 + 0.2,
+    a: Math.random(),
+    speed: Math.random() * 0.003 + 0.001,
+    phase: Math.random() * Math.PI * 2
+  }));
+}
+function drawStars() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach(s => {
+    s.a = 0.3 + 0.5 * Math.sin(Date.now() * s.speed + s.phase);
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(232,228,216,${s.a})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+resize();
+initStars();
+drawStars();
+window.addEventListener('resize', () => { resize(); initStars(); });
+
+// ─── Tabs ───
+let current = 0;
+const totalPanels = 5;
+function goTo(n) {
+  document.querySelectorAll('.panel').forEach((p,i) => p.classList.toggle('active', i === n));
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i === n));
+  const dots = document.querySelectorAll('.pdot');
+  dots.forEach((d,i) => {
+    d.classList.toggle('active', i === n);
+    d.classList.toggle('done', i < n);
+  });
+  current = n;
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// ─── Transurfing concept toggle ───
+function toggleConcept(el) {
+  const wasOpen = el.classList.contains('open');
+  document.querySelectorAll('.concept').forEach(c => c.classList.remove('open'));
+  if (!wasOpen) el.classList.add('open');
+}
+
+// ─── Routine slot toggles ───
+function toggleSlot(el, group) {
+  el.classList.toggle('active-slot');
+  const count = document.querySelectorAll(`#${group}Slots .active-slot`).length;
+  const total = document.querySelectorAll(`#${group}Slots .slot`).length;
+  document.getElementById(`${group}Count`).textContent = `${count} of ${total} selected`;
+}
+
+// ─── Streak dots ───
+const DAYS = 28;
+const dayLabels = Array.from({length: DAYS}, (_, i) => {
+  const d = new Date();
+  d.setDate(d.getDate() - (DAYS - 1 - i));
+  return d.toLocaleDateString('en', {weekday:'narrow'});
+});
+
+let dotState = Array.from({length: 5}, () => Array(DAYS).fill(false));
+
+function renderDots() {
+  for (let h = 0; h < 5; h++) {
+    const container = document.getElementById(`dots-${h}`);
+    container.innerHTML = '';
+    dotState[h].forEach((lit, d) => {
+      const btn = document.createElement('button');
+      btn.className = 'sdot' + (lit ? ' lit' : '');
+      btn.textContent = dayLabels[d];
+      btn.title = `Day ${d+1}`;
+      btn.onclick = () => { dotState[h][d] = !dotState[h][d]; renderDots(); updateStats(); };
+      container.appendChild(btn);
+    });
+  }
+}
+
+function updateStats() {
+  const allDays = dotState[0].map((_, d) => dotState.some(h => h[d]));
+  let streak = 0;
+  for (let i = allDays.length - 1; i >= 0; i--) {
+    if (allDays[i]) streak++;
+    else break;
+  }
+  document.getElementById('streakCount').textContent = streak;
+  const total = dotState.flat().filter(Boolean).length;
+  document.getElementById('totalDone').textContent = total;
+}
+
+renderDots();
+</script>
+</body>
+</html>
