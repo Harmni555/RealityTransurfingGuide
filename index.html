@@ -610,6 +610,167 @@ body {
   .sdot { width: 18px; height: 18px; font-size: 8px; }
   .habit-row { flex-wrap: wrap; }
 }
+
+/* ── Guide Panel ── */
+.guide-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.guide-step {
+  background: var(--mid);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.guide-step:hover { border-color: rgba(201,169,110,0.2); }
+.guide-step-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  cursor: default;
+}
+.guide-icon {
+  font-size: 26px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.guide-num {
+  font-family: 'Inconsolata', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.8;
+  margin-bottom: 3px;
+}
+.guide-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 19px;
+  font-weight: 400;
+}
+.guide-body {
+  padding: 0 24px 22px 66px;
+  font-size: 13.5px;
+  color: var(--mist);
+  line-height: 1.8;
+  font-weight: 300;
+}
+.guide-tip {
+  margin-top: 14px;
+  padding: 11px 16px;
+  background: rgba(201,169,110,0.07);
+  border-left: 2px solid var(--gold);
+  border-radius: 0 8px 8px 0;
+  font-size: 12.5px;
+  color: var(--star);
+  opacity: 0.85;
+}
+.guide-tip strong { color: var(--gold); font-family: 'Inconsolata', monospace; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
+.guide-body code {
+  font-family: 'Inconsolata', monospace;
+  font-size: 12px;
+  background: rgba(255,255,255,0.07);
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: var(--teal);
+}
+@media (max-width: 600px) {
+  .guide-body { padding-left: 24px; }
+}
+
+/* ── Save Bar ── */
+.save-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 100;
+  background: rgba(13,17,32,0.92);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border);
+  padding: 12px 28px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  justify-content: space-between;
+}
+.save-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inconsolata', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--mist);
+}
+.save-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--mist);
+  transition: background 0.4s, box-shadow 0.4s;
+}
+.save-dot.saved   { background: var(--teal); box-shadow: 0 0 6px var(--teal); }
+.save-dot.saving  { background: var(--gold); box-shadow: 0 0 6px var(--gold); animation: pulse-dot 0.8s infinite; }
+.save-dot.unsaved { background: var(--rose); }
+@keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+.save-actions { display: flex; gap: 8px; align-items: center; }
+.btn-save {
+  font-family: 'Inconsolata', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.btn-save-file {
+  background: var(--gold);
+  color: var(--void);
+  font-weight: 500;
+}
+.btn-save-file:hover { background: #d4b47e; transform: translateY(-1px); }
+.btn-load-file {
+  background: none;
+  border-color: var(--border);
+  color: var(--mist);
+}
+.btn-load-file:hover { border-color: var(--violet); color: var(--violet); }
+.btn-clear {
+  background: none;
+  border-color: transparent;
+  color: rgba(139,144,168,0.5);
+  font-size: 9px;
+}
+.btn-clear:hover { color: var(--rose); }
+
+/* Toast notification */
+.toast {
+  position: fixed;
+  bottom: 72px; left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-family: 'Inconsolata', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--star);
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.35s ease;
+  z-index: 200;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Hidden file input */
+#fileInput { display: none; }
 </style>
 </head>
 <body>
@@ -638,19 +799,126 @@ body {
     <div class="pdot"></div>
     <div class="pdot"></div>
     <div class="pdot"></div>
+    <div class="pdot"></div>
   </div>
 
   <!-- Tab nav -->
   <div class="tab-nav">
-    <button class="tab-btn active" onclick="goTo(0)">Frameworks</button>
-    <button class="tab-btn" onclick="goTo(1)">Transurfing Map</button>
-    <button class="tab-btn" onclick="goTo(2)">Daily Practice</button>
-    <button class="tab-btn" onclick="goTo(3)">Depth Tracker</button>
-    <button class="tab-btn" onclick="goTo(4)">Journal</button>
+    <button class="tab-btn active" onclick="goTo(0)">✦ Guide</button>
+    <button class="tab-btn" onclick="goTo(1)">Frameworks</button>
+    <button class="tab-btn" onclick="goTo(2)">Transurfing Map</button>
+    <button class="tab-btn" onclick="goTo(3)">Daily Practice</button>
+    <button class="tab-btn" onclick="goTo(4)">Depth Tracker</button>
+    <button class="tab-btn" onclick="goTo(5)">Journal</button>
   </div>
 
-  <!-- ── PANEL 0: Frameworks ── -->
+  <!-- ── PANEL 0: Guide ── -->
   <div class="panel active" id="panel-0">
+    <div class="s-label">Welcome — How to Use This Tool</div>
+    <div class="s-title">Your Inner Space Guide</div>
+    <div class="s-desc">A complete orientation to each section — so you can move through this framework with clarity and intention from day one.</div>
+
+    <div class="guide-steps">
+
+      <div class="guide-step">
+        <div class="guide-step-head">
+          <div class="guide-icon">🧩</div>
+          <div>
+            <div class="guide-num">01 — Frameworks</div>
+            <div class="guide-title">Understand the Four Pillars</div>
+          </div>
+        </div>
+        <div class="guide-body">
+          Start here if you're new or returning after a gap. The Frameworks panel introduces the four interlocking practices that form this system: Meditation, Visualization, Reality Transurfing, and Heart–Mind Coherence. Read each card carefully — then come back after two weeks of practice and notice how your understanding has shifted.
+          <div class="guide-tip">💡 <strong>Tip:</strong> Don't rush past this panel. Most people underestimate how much their intellectual understanding differs from embodied knowledge.</div>
+        </div>
+      </div>
+
+      <div class="guide-step">
+        <div class="guide-step-head">
+          <div class="guide-icon">🌌</div>
+          <div>
+            <div class="guide-num">02 — Transurfing Map</div>
+            <div class="guide-title">Explore the Core Concepts</div>
+          </div>
+        </div>
+        <div class="guide-body">
+          Tap any concept card to unfold its deeper meaning and practice instructions. These are the six ideas most commonly misunderstood in Vadim Zeland's work — Space of Variations, Reducing Importance, Pendulums, Goal + Door, The Slide, and Soul–Mind Unity. Each entry tells you not just what it means, but <em>how</em> to actually use it in practice.
+          <div class="guide-tip">💡 <strong>Tip:</strong> Focus on one concept per week. Read it in the morning, then watch for it in your day.</div>
+        </div>
+      </div>
+
+      <div class="guide-step">
+        <div class="guide-step-head">
+          <div class="guide-icon">🕰️</div>
+          <div>
+            <div class="guide-num">03 — Daily Practice</div>
+            <div class="guide-title">Build Your Routine</div>
+          </div>
+        </div>
+        <div class="guide-body">
+          Toggle the morning and evening slots you want to commit to. Each slot is a specific timed practice — from the opening Still Sitting to the Hypnagogic Slide before sleep. Start with 2–3 practices and let them become automatic before adding more. Your selections are saved automatically.
+          <div class="guide-tip">💡 <strong>Tip:</strong> The evening Hypnagogic Slide (just before sleep) is the single highest-leverage practice. If you only do one thing, do that.</div>
+        </div>
+      </div>
+
+      <div class="guide-step">
+        <div class="guide-step-head">
+          <div class="guide-icon">📅</div>
+          <div>
+            <div class="guide-num">04 — Depth Tracker</div>
+            <div class="guide-title">Mark Your Streak</div>
+          </div>
+        </div>
+        <div class="guide-body">
+          Five habits, 28 days. Click any dot to mark a day complete. The tracker shows your current streak and total sessions logged. The goal is not perfection — it is return. Every dot you mark is a vote for who you are becoming. The tracker covers the last 28 days from today and updates automatically each morning.
+          <div class="guide-tip">💡 <strong>Tip:</strong> Don't let the tracker become a pendulum. If you miss two days, simply return without self-judgment. That return <em>is</em> the practice.</div>
+        </div>
+      </div>
+
+      <div class="guide-step">
+        <div class="guide-step-head">
+          <div class="guide-icon">📓</div>
+          <div>
+            <div class="guide-num">05 — Journal</div>
+            <div class="guide-title">The Evening Reflection</div>
+          </div>
+        </div>
+        <div class="guide-body">
+          Four prompts designed specifically for Transurfing and meditation practice. Answer them each evening — even briefly. The prompts ask about your Slide quality, where importance spiked, signs of flow in your day, and your intention for tomorrow. Your entries are saved automatically as you type.
+          <div class="guide-tip">💡 <strong>Tip:</strong> Aim for honesty over beauty. Three raw sentences are worth more than a polished paragraph that isn't quite true.</div>
+        </div>
+      </div>
+
+      <div class="guide-step">
+        <div class="guide-step-head">
+          <div class="guide-icon">💾</div>
+          <div>
+            <div class="guide-num">Saving Your Work</div>
+            <div class="guide-title">Auto-Save + File Backup</div>
+          </div>
+        </div>
+        <div class="guide-body">
+          Everything saves automatically to your browser as you work — the status dot at the bottom shows you when. For a permanent backup (or to use on another device), click <strong>Save to Computer</strong> in the bottom bar. This downloads a <code>.json</code> file you can reload at any time using <strong>Load File</strong>. Use <strong>Reset</strong> only when you want a completely fresh start.
+          <div class="guide-tip">💡 <strong>Tip:</strong> Save a file to your computer once a week. Browsers can clear local storage if you clear your cache.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="quote-block" style="margin-top:32px;">
+      <div class="quote-text">"The path is not about arriving. It is about learning to move with less resistance, more clarity, and a quieter mind."</div>
+      <div class="quote-attr">— Inner Space Practice Notes</div>
+    </div>
+
+    <div class="nav-row">
+      <span></span>
+      <button class="btn btn-gold" onclick="goTo(1)">Begin: Frameworks →</button>
+    </div>
+  </div>
+
+  <!-- ── PANEL 1: Frameworks ── -->
+  <div class="panel" id="panel-1">
     <div class="s-label">Step 01 — Core Frameworks</div>
     <div class="s-title">The Four Pillars of Inner Practice</div>
     <div class="s-desc">You have a foundation. Now it's about moving from intellectual knowledge to embodied habit. These frameworks work together — each one deepens the others.</div>
@@ -689,12 +957,12 @@ body {
 
     <div class="nav-row">
       <span></span>
-      <button class="btn btn-gold" onclick="goTo(1)">Next: Transurfing Map →</button>
+      <button class="btn btn-gold" onclick="goTo(2)">Next: Transurfing Map →</button>
     </div>
   </div>
 
-  <!-- ── PANEL 1: Transurfing Map ── -->
-  <div class="panel" id="panel-1">
+  <!-- ── PANEL 2: Transurfing Map ── -->
+  <div class="panel" id="panel-2">
     <div class="s-label">Step 02 — Transurfing Deep Map</div>
     <div class="s-title">Core Concepts, Expanded</div>
     <div class="s-desc">Tap each concept to unfold the deeper layer — and how it connects to your practice. These are the ideas most people misunderstand, even after reading the books.</div>
@@ -772,13 +1040,13 @@ body {
     </div>
 
     <div class="nav-row">
-      <button class="btn btn-ghost" onclick="goTo(0)">← Back</button>
-      <button class="btn btn-gold" onclick="goTo(2)">Next: Daily Practice →</button>
+      <button class="btn btn-ghost" onclick="goTo(1)">← Back</button>
+      <button class="btn btn-gold" onclick="goTo(3)">Next: Daily Practice →</button>
     </div>
   </div>
 
-  <!-- ── PANEL 2: Daily Practice ── -->
-  <div class="panel" id="panel-2">
+  <!-- ── PANEL 3: Daily Practice ── -->
+  <div class="panel" id="panel-3">
     <div class="s-label">Step 03 — Habit Architecture</div>
     <div class="s-title">Your Daily Practice Routine</div>
     <div class="s-desc">Toggle the practices you want to commit to. Start with 2–3. You can expand as they become automatic. Timing is suggestive — shift to fit your life.</div>
@@ -856,13 +1124,13 @@ body {
     </div>
 
     <div class="nav-row">
-      <button class="btn btn-ghost" onclick="goTo(1)">← Back</button>
-      <button class="btn btn-gold" onclick="goTo(3)">Next: Depth Tracker →</button>
+      <button class="btn btn-ghost" onclick="goTo(2)">← Back</button>
+      <button class="btn btn-gold" onclick="goTo(4)">Next: Depth Tracker →</button>
     </div>
   </div>
 
-  <!-- ── PANEL 3: Depth Tracker ── -->
-  <div class="panel" id="panel-3">
+  <!-- ── PANEL 4: Depth Tracker ── -->
+  <div class="panel" id="panel-4">
     <div class="s-label">Step 04 — Habit Tracker</div>
     <div class="s-title">Track Your Streak</div>
     <div class="s-desc">Mark each day you completed your core practices. Consistency over 21 days begins the shift from effort to automatic. Hover and click to mark days done.</div>
@@ -925,13 +1193,13 @@ body {
     </div>
 
     <div class="nav-row">
-      <button class="btn btn-ghost" onclick="goTo(2)">← Back</button>
-      <button class="btn btn-gold" onclick="goTo(4)">Next: Journal →</button>
+      <button class="btn btn-ghost" onclick="goTo(3)">← Back</button>
+      <button class="btn btn-gold" onclick="goTo(5)">Next: Journal →</button>
     </div>
   </div>
 
-  <!-- ── PANEL 4: Journal ── -->
-  <div class="panel" id="panel-4">
+  <!-- ── PANEL 5: Journal ── -->
+  <div class="panel" id="panel-5">
     <div class="s-label">Step 05 — Reflection Journal</div>
     <div class="s-title">The Inner Observer's Log</div>
     <div class="s-desc">Regular reflection is what separates people who dabble from those who transform. These prompts are tuned specifically for Transurfing + meditation practice.</div>
@@ -964,12 +1232,31 @@ body {
     </div>
 
     <div class="nav-row">
-      <button class="btn btn-ghost" onclick="goTo(3)">← Back</button>
+      <button class="btn btn-ghost" onclick="goTo(4)">← Back</button>
       <button class="btn btn-gold" onclick="goTo(0)">↺ Start Over</button>
     </div>
   </div>
 
 </div><!-- /shell -->
+
+<!-- Save Bar -->
+<div class="save-bar">
+  <div class="save-status">
+    <div class="save-dot" id="saveDot"></div>
+    <span id="saveLabel">No changes yet</span>
+  </div>
+  <div class="save-actions">
+    <button class="btn-save btn-clear" onclick="clearAllData()" title="Reset all data">↺ Reset</button>
+    <label class="btn-save btn-load-file" title="Load a saved .json file">
+      📂 Load File
+      <input type="file" id="fileInput" accept=".json" onchange="loadFromFile(event)">
+    </label>
+    <button class="btn-save btn-save-file" onclick="saveToFile()">💾 Save to Computer</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
 
 <script>
 // ─── Starfield ───
@@ -1008,7 +1295,6 @@ window.addEventListener('resize', () => { resize(); initStars(); });
 
 // ─── Tabs ───
 let current = 0;
-const totalPanels = 5;
 function goTo(n) {
   document.querySelectorAll('.panel').forEach((p,i) => p.classList.toggle('active', i === n));
   document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i === n));
@@ -1034,6 +1320,8 @@ function toggleSlot(el, group) {
   const count = document.querySelectorAll(`#${group}Slots .active-slot`).length;
   const total = document.querySelectorAll(`#${group}Slots .slot`).length;
   document.getElementById(`${group}Count`).textContent = `${count} of ${total} selected`;
+  markUnsaved();
+  autoSave();
 }
 
 // ─── Streak dots ───
@@ -1055,7 +1343,13 @@ function renderDots() {
       btn.className = 'sdot' + (lit ? ' lit' : '');
       btn.textContent = dayLabels[d];
       btn.title = `Day ${d+1}`;
-      btn.onclick = () => { dotState[h][d] = !dotState[h][d]; renderDots(); updateStats(); };
+      btn.onclick = () => {
+        dotState[h][d] = !dotState[h][d];
+        renderDots();
+        updateStats();
+        markUnsaved();
+        autoSave();
+      };
       container.appendChild(btn);
     });
   }
@@ -1073,7 +1367,195 @@ function updateStats() {
   document.getElementById('totalDone').textContent = total;
 }
 
-renderDots();
+// ─── Save / Load system ───
+const STORAGE_KEY = 'innerspace_journal';
+let autoSaveTimer = null;
+let hasUnsaved = false;
+
+function collectState() {
+  // Journal entries
+  const journal = {};
+  document.querySelectorAll('.j-textarea').forEach((ta, i) => {
+    journal[`entry_${i}`] = ta.value;
+  });
+
+  // Routine slots
+  const morningSlots = [...document.querySelectorAll('#morningSlots .slot')].map(s => s.classList.contains('active-slot'));
+  const eveningSlots = [...document.querySelectorAll('#eveningSlots .slot')].map(s => s.classList.contains('active-slot'));
+
+  return {
+    version: 1,
+    savedAt: new Date().toISOString(),
+    journal,
+    dotState,
+    morningSlots,
+    eveningSlots
+  };
+}
+
+function applyState(state) {
+  // Journal
+  if (state.journal) {
+    document.querySelectorAll('.j-textarea').forEach((ta, i) => {
+      ta.value = state.journal[`entry_${i}`] || '';
+    });
+  }
+
+  // Dots
+  if (state.dotState) {
+    dotState = state.dotState;
+    renderDots();
+    updateStats();
+  }
+
+  // Routine slots
+  if (state.morningSlots) {
+    document.querySelectorAll('#morningSlots .slot').forEach((el, i) => {
+      el.classList.toggle('active-slot', !!state.morningSlots[i]);
+    });
+    const count = document.querySelectorAll('#morningSlots .active-slot').length;
+    const total = document.querySelectorAll('#morningSlots .slot').length;
+    document.getElementById('morningCount').textContent = `${count} of ${total} selected`;
+  }
+  if (state.eveningSlots) {
+    document.querySelectorAll('#eveningSlots .slot').forEach((el, i) => {
+      el.classList.toggle('active-slot', !!state.eveningSlots[i]);
+    });
+    const count = document.querySelectorAll('#eveningSlots .active-slot').length;
+    const total = document.querySelectorAll('#eveningSlots .slot').length;
+    document.getElementById('eveningCount').textContent = `${count} of ${total} selected`;
+  }
+}
+
+// Auto-save to localStorage
+function autoSave() {
+  clearTimeout(autoSaveTimer);
+  setSaveStatus('saving', 'Saving…');
+  autoSaveTimer = setTimeout(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(collectState()));
+      hasUnsaved = false;
+      const t = new Date().toLocaleTimeString('en', {hour:'2-digit', minute:'2-digit'});
+      setSaveStatus('saved', `Auto-saved at ${t}`);
+    } catch(e) {
+      setSaveStatus('unsaved', 'Auto-save failed');
+    }
+  }, 800);
+}
+
+function markUnsaved() {
+  hasUnsaved = true;
+  setSaveStatus('unsaved', 'Unsaved changes');
+}
+
+function setSaveStatus(state, label) {
+  const dot = document.getElementById('saveDot');
+  const lbl = document.getElementById('saveLabel');
+  dot.className = 'save-dot ' + state;
+  lbl.textContent = label;
+}
+
+// Download as .json file
+function saveToFile() {
+  const state = collectState();
+  const blob = new Blob([JSON.stringify(state, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const date = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = `inner-space-journal-${date}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  // Also persist to localStorage
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  hasUnsaved = false;
+  setSaveStatus('saved', 'Saved to file ✓');
+  showToast('💾 Journal saved to your computer');
+}
+
+// Load from .json file
+function loadFromFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const state = JSON.parse(e.target.result);
+      if (!state.version) throw new Error('Invalid file');
+      applyState(state);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      hasUnsaved = false;
+      const savedAt = state.savedAt ? new Date(state.savedAt).toLocaleDateString('en', {month:'short', day:'numeric'}) : 'file';
+      setSaveStatus('saved', `Loaded from ${savedAt}`);
+      showToast('📂 Journal loaded successfully');
+    } catch(err) {
+      showToast('⚠️ Could not read that file');
+    }
+  };
+  reader.readAsText(file);
+  // Reset input so same file can be re-selected
+  event.target.value = '';
+}
+
+// Clear all data
+function clearAllData() {
+  if (!confirm('Reset all journal entries, habits, and routine selections? This cannot be undone.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  dotState = Array.from({length: 5}, () => Array(DAYS).fill(false));
+  renderDots();
+  updateStats();
+  document.querySelectorAll('.j-textarea').forEach(ta => ta.value = '');
+  document.querySelectorAll('.slot').forEach(el => el.classList.remove('active-slot'));
+  document.getElementById('morningCount').textContent = '0 of 4 selected';
+  document.getElementById('eveningCount').textContent = '0 of 3 selected';
+  setSaveStatus('', 'All data cleared');
+  showToast('↺ Journal reset');
+}
+
+// Toast helper
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// Attach change listeners to journal textareas
+document.querySelectorAll('.j-textarea').forEach(ta => {
+  ta.addEventListener('input', () => {
+    markUnsaved();
+    autoSave();
+  });
+});
+
+// ─── Init: load from localStorage on startup ───
+(function init() {
+  renderDots();
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const state = JSON.parse(raw);
+      applyState(state);
+      const t = state.savedAt
+        ? new Date(state.savedAt).toLocaleDateString('en', {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'})
+        : 'previously';
+      setSaveStatus('saved', `Restored from ${t}`);
+      showToast('✨ Previous session restored');
+    } else {
+      setSaveStatus('', 'No changes yet');
+    }
+  } catch(e) {
+    setSaveStatus('', 'Ready');
+  }
+
+  // Warn before leaving with unsaved changes
+  window.addEventListener('beforeunload', (e) => {
+    if (hasUnsaved) {
+      e.preventDefault();
+      e.returnValue = '';
+    }
+  });
+})();
 </script>
 </body>
 </html>
